@@ -8,7 +8,6 @@ import org.study.coupon.customer.api.beans.RequestCoupon;
 import org.study.coupon.customer.api.beans.SearchCoupon;
 import org.study.coupon.customer.dao.entity.Coupon;
 import org.study.coupon.template.api.beans.CouponInfo;
-import io.micrometer.core.instrument.search.Search;
 
 import java.util.List;
 

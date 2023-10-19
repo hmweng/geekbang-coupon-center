@@ -14,6 +14,6 @@ public class CouponConverter {
                 .shopId(coupon.getShopId())
                 .userId(coupon.getUserId())
                 .template(coupon.getTemplateInfo())
-                .build();
+                .build();ReactorServiceInstanceLoadBalancer
     }
 }
