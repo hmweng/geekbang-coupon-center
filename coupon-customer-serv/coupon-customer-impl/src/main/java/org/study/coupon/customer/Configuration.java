@@ -1,8 +1,7 @@
 package org.study.coupon.customer;
 
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import feign.Logger;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * @author：jicai
@@ -15,10 +14,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class Configuration {
 
     // 注册Bean并添加负载均衡功能
-    @Bean
+   /* @Bean
     @LoadBalanced
     public WebClient.Builder register() {
         return WebClient.builder();
+    }*/
+
+    @Bean
+    Logger.Level feignLogger() {
+        return Logger.Level.FULL;
     }
 
 }

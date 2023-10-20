@@ -3,6 +3,7 @@ package org.study.coupon.customer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = {"org.study"})
 //用于扫描JPA实体类 @Entity，默认扫本包当下路径
 @EntityScan(basePackages = {"org.study"})
+//用于开启openFeign组件
+@EnableFeignClients(basePackages = {"org.study.coupon.customer.feign"})
 public class CustomerApplication {
 
     public static void main(String[] args) {

@@ -65,3 +65,14 @@ spring:
 logging:
   level:
     com.broadview.coupon: debug
+    org.study.coupon.customer.feign: debug
+#    org.study.coupon.customer.feign.CalculationService: debug
+
+feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 3000
+#        readTimeout: 3000
+  circuitbreaker:
+    enabled: true
