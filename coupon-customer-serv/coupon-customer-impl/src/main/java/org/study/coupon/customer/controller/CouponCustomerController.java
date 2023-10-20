@@ -1,5 +1,7 @@
 package org.study.coupon.customer.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.study.coupon.calculation.api.beans.ShoppingCart;
 import org.study.coupon.calculation.api.beans.SimulationOrder;
 import org.study.coupon.calculation.api.beans.SimulationResponse;
@@ -13,25 +15,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
+@RefreshScope
 @RestController
 @RequestMapping("coupon-customer")
 public class CouponCustomerController {
+
+    @Value("${disableCouponRequest:false}")
+    private boolean disableCoupon;
 
     @Autowired
     private CouponCustomerService customerService;
 
     @PostMapping("requestCoupon")
     public Coupon requestCoupon(@Valid @RequestBody RequestCoupon request) {
+        log.info("领取优惠券状态：#{}, #{}", disableCoupon, new Date());
+        if (disableCoupon) {
+            return null;
+        }
         return customerService.requestCoupon(request);
     }
 
     // 用户删除优惠券
     @DeleteMapping("deleteCoupon")
     public void deleteCoupon(@RequestParam("userId") Long userId,
-                                       @RequestParam("couponId") Long couponId) {
+                             @RequestParam("couponId") Long couponId) {
         customerService.deleteCoupon(userId, couponId);
     }
 
