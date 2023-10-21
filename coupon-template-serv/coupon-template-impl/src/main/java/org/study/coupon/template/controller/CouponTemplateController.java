@@ -1,6 +1,9 @@
 package org.study.coupon.template.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,16 +39,34 @@ public class CouponTemplateController {
 
     // 读取优惠券
     @GetMapping("/getTemplate")
-    public CouponTemplateInfo getTemplate(@RequestParam("id") Long id){
+    @SentinelResource(value = "getTemplate")
+    public CouponTemplateInfo getTemplate(@RequestParam("id") Long id) {
         log.info("Load template, id={}", id);
         return couponTemplateService.loadTemplateInfo(id);
     }
 
     // 批量获取
     @GetMapping("/getBatch")
+    @SentinelResource(value = "getTemplateInBatch",
+            fallback = "getTemplateInBatch_fallback",
+            blockHandler = "getTemplateInBatch_block")
     public Map<Long, CouponTemplateInfo> getTemplateInBatch(@RequestParam("ids") Collection<Long> ids) {
         log.info("getTemplateInBatch: {}", JSON.toJSONString(ids));
+        /*if (ids.size() == 1) {
+            throw new RuntimeException("降级测试");
+        }*/
         return couponTemplateService.getTemplateInfoMap(ids);
+    }
+
+    public Map<?, ?> getTemplateInBatch_block(Collection<?> ids, BlockException exception) {
+        log.info("接口被限流，异常信息为#{}", exception.getMessage());
+        return Maps.newHashMap();
+    }
+
+    // 接口被降级时的方法
+    public Map getTemplateInBatch_fallback(Collection ids) {
+        log.info("接口被降级");
+        return Maps.newHashMap();
     }
 
     // 搜索模板
@@ -57,7 +78,7 @@ public class CouponTemplateController {
 
     // 优惠券无效化
     @DeleteMapping("/deleteTemplate")
-    public void deleteTemplate(@RequestParam("id") Long id){
+    public void deleteTemplate(@RequestParam("id") Long id) {
         log.info("Load template, id={}", id);
         couponTemplateService.deleteTemplate(id);
     }

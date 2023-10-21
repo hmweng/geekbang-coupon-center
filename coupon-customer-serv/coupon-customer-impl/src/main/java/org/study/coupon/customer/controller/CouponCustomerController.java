@@ -1,5 +1,6 @@
 package org.study.coupon.customer.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.study.coupon.calculation.api.beans.ShoppingCart;
@@ -31,6 +32,7 @@ public class CouponCustomerController {
     private CouponCustomerService customerService;
 
     @PostMapping("requestCoupon")
+    @SentinelResource(value = "requestCoupon")
     public Coupon requestCoupon(@Valid @RequestBody RequestCoupon request) {
         log.info("领取优惠券状态：#{}, #{}", disableCoupon, new Date());
         if (disableCoupon) {
@@ -61,6 +63,7 @@ public class CouponCustomerController {
 
     // 实现的时候最好封装一个search object类
     @PostMapping("findCoupon")
+    @SentinelResource(value = "customer-findCoupon")
     public List<CouponInfo> findCoupon(@Valid @RequestBody SearchCoupon request) {
         return customerService.findCoupon(request);
     }
